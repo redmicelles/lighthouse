@@ -1,0 +1,637 @@
+{
+	"info": {
+		"_postman_id": "60ec4273-7ee1-41b1-a9af-0b01fead52bf",
+		"name": "Lighthouse",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29835614"
+	},
+	"item": [
+		{
+			"name": "create_tasks_fail1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"status Input should be 'pending', 'in-progress' or 'completed'\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 1\",\n    \"description\": \"This is task 1\",\n    \"status\": \"final\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks"
+					]
+				},
+				"description": "Create task with wrong status"
+			},
+			"response": []
+		},
+		{
+			"name": "create_tasks_fail2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"title String should have at least 3 characters\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Ta\",\n    \"description\": \"This is task 1\",\n    \"status\": \"pending\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks"
+					]
+				},
+				"description": "Create task with short title."
+			},
+			"response": []
+		},
+		{
+			"name": "create_tasks_fail3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"description String should have at least 3 characters\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 1\",\n    \"description\": \"Th\",\n    \"status\": \"final\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks"
+					]
+				},
+				"description": "Create task with short description."
+			},
+			"response": []
+		},
+		{
+			"name": "create_tasks_fail4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"extra_param Extra inputs are not permitted\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 1\",\n    \"description\": \"This is task 1\",\n    \"status\": \"pending\",\n    \"extra_param\": \"extra_param\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks"
+					]
+				},
+				"description": "Create task with extra parameters."
+			},
+			"response": []
+		},
+		{
+			"name": "create_tasks_success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"taskId\", responseJson.taskId);",
+							"",
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(responseJson.taskId).to.have.lengthOf(32);",
+							"    pm.expect(pm.response.code).to.eql(201);",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"taskId\");",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"title\");",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"description\");",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"status\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 1\",\n    \"description\": \"This is task 1\",\n    \"status\": \"pending\"\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "retrieve_tasks_success_empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(404)",
+							"    pm.expect(responseJson).to.be.empty",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/tasks/xcff27728822",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"xcff27728822"
+					]
+				},
+				"description": "Retrieve task with non-existing task id."
+			},
+			"response": []
+		},
+		{
+			"name": "retrieve_tasks_success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(responseJson.taskId).to.have.lengthOf(32);",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"taskId\");",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"title\");",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"description\");",
+							"    pm.expect(responseJson).to.haveOwnProperty(\"status\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/tasks/{{taskId}}",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"{{taskId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_tasks_fail1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"status Input should be 'pending', 'in-progress' or 'completed'\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 3\",\n    \"description\": \"This is task 3\",\n    \"status\": \"completing\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks/{{taskId}}",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"{{taskId}}"
+					]
+				},
+				"description": "Update task with wrong status."
+			},
+			"response": []
+		},
+		{
+			"name": "update_tasks_fail2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"title String should have at least 3 characters\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Ta\",\n    \"description\": \"This is task 3\",\n    \"status\": \"completed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks/{{taskId}}",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"{{taskId}}"
+					]
+				},
+				"description": "Update task with short title."
+			},
+			"response": []
+		},
+		{
+			"name": "update_tasks_fail3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"description String should have at least 3 characters\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 3\",\n    \"description\": \"Th\",\n    \"status\": \"completed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks/{{taskId}}",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"{{taskId}}"
+					]
+				},
+				"description": "Update task with short description."
+			},
+			"response": []
+		},
+		{
+			"name": "update_tasks_fail4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"    const responseJson = pm.response.json();",
+							"    console.log(responseJson)",
+							"    pm.expect(responseJson.message).to.eql(\"Task not found!\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 3\",\n    \"description\": \"This is task 3\",\n    \"status\": \"completed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks/kkks992882",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"kkks992882"
+					]
+				},
+				"description": "Update task wrong task id."
+			},
+			"response": []
+		},
+		{
+			"name": "update_tasks_fail5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(422);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"extra_param Extra inputs are not permitted\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 3\",\n    \"description\": \"This is task 3\",\n    \"status\": \"completed\",\n    \"extra_param\": \"extra_param\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks/{{taskId}}",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"{{taskId}}"
+					]
+				},
+				"description": "Update task with extra parameters."
+			},
+			"response": []
+		},
+		{
+			"name": "update_tasks_success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseJson = JSON.parse(responseBody);",
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(responseJson.taskId).to.have.lengthOf(32);",
+							"    pm.expect(responseBody).to.eql(responseBody);",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Task 3\",\n    \"description\": \"This is task 3\",\n    \"status\": \"completed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base}}/tasks/{{taskId}}",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"{{taskId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_tasks_fail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.message).to.eql(\"Task not found!\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/tasks/63hsnnsn",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"63hsnnsn"
+					]
+				},
+				"description": "Attempt delete with wrong task id."
+			},
+			"response": []
+		},
+		{
+			"name": "delete_tasks_success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response has all properties\", () => {",
+							"    pm.expect(pm.response.code).to.eql(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/tasks/{{taskId}}",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"tasks",
+						"{{taskId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
